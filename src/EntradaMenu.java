@@ -6,8 +6,8 @@ public class EntradaMenu {
 		char itemMenu;
 		Scanner leia = new Scanner(System.in);
 		System.out.println("\nInforme a opção desejada:");
-		System.out.println("[N]ovo Jogo");
-		System.out.println("[R]esultado do Último Jogo");
+		System.out.println("[N]ova Rodada");
+		System.out.println("[R]esultado da Última Rodada");
 		System.out.println("[E]cerrar Sistema");
 		try {
 			itemMenu = leia.next().charAt(0);
@@ -56,8 +56,30 @@ public class EntradaMenu {
         	System.err.println("Entrada inválida!! >> "+e.getMessage()+" Informe novamente!!");
         	nome = leiaNomeJogador(jogador);
 		}
+		while (nome.length()<13){
+			nome = nome + " ";
+		}
 		nome = nome.toUpperCase();
 		return nome;
+	}
+	
+	public int escolhaCarta(int jogadorDaVez, int baralho[][]){
+		int carta;
+
+		Scanner leia = new Scanner(System.in);
+		try {
+			carta = leia.nextInt();
+			if (carta < 0 || carta > 51){
+				throw new Exception("A carta "+carta+" não existe");
+			}
+			if (baralho[carta][1] != (jogadorDaVez+1)){
+				throw new Exception("Você não possui a carta "+carta);
+			}
+		}catch(Exception e){
+        	System.err.println(">> "+e.getMessage()+" << Escolha outra carta");
+        	carta = escolhaCarta(jogadorDaVez, baralho);
+		}
+		return carta;
 	}
 
 }

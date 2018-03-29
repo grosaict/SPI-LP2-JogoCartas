@@ -5,12 +5,12 @@ public class Jogo {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+		int carta [][] = new int[52][2];
+		int baralho [][] = new int[52][2];
+		
 		char itemMenu;
 		int rodada = 0;
 		int primeiroJogador;
-		
-		int carta [][] = new int[52][2];
-		int baralho [][] = new int[52][2];
 		
 		EntradaMenu em = new EntradaMenu();
 		Baralho b = new Baralho();
@@ -23,17 +23,20 @@ public class Jogo {
 			switch (itemMenu){
 			case 'N':
 				rodada ++;
-				b.InicializaBaralho();		//rotinas para inicializar e buscar o baralho gerado
-				carta = b.getCarta();
-				baralho = b.getBaralho();
+				b.InicializaBaralho();				//rotina para inicializar o baralho
 				
-				r.RecebeJogadores(rodada);	//rotinas para realizar a rodada
+				r.RecebeJogadores(rodada);			//rotinas para inicializar jogadores
 				primeiroJogador = r.SorteiaPrimeiroJogador();
-				baralho = b.Atribui5Cartas(primeiroJogador);
+				b.Atribui5Cartas(primeiroJogador);
 				
-				b.setCarta(carta);			//rotinas para atualizar e visualizar o baralho
+				b.VisualizaBaralho();				//rotina para visualizar o baralho
+				
+				carta = b.getCarta();				//rotinas para executar a jogada
+				baralho = b.getBaralho();
+				baralho = r.RealizaRodada(primeiroJogador, carta, baralho);
 				b.setBaralho(baralho);
-				b.VisualizaBaralho();
+				
+				//b.VisualizaBaralho();				//rotina para visualizar o baralho
 				break;
 			case 'R':
 				if (rodada > 0){

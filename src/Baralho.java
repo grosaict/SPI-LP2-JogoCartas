@@ -13,7 +13,8 @@ public class Baralho {
 		 * 		3 = Paus				Q = 11  				3 = jogador 3
 		 * 								K = 12  				4 = jogador 4
 		 *														5 = jogador 5
-		 *    													6 = mesa*/
+		 *    													6 = mesa
+		 *    													7 = fora do jogo*/
 		Random randomiza = new Random();
 		int cartaBaralho = 0;
 		int cartaQualquer;
@@ -52,7 +53,7 @@ public class Baralho {
 		}
 	}
 
-	public int[][] Atribui5Cartas(int primeiroJogador) {
+	public void Atribui5Cartas(int primeiroJogador) {
 		int jogadorAtual = primeiroJogador;
 		
 		for (int cartaBaralho=0; cartaBaralho<25; cartaBaralho++){
@@ -63,42 +64,50 @@ public class Baralho {
 				jogadorAtual++;
 			}
 		}
-		
-		return this.baralho;
 	}
 	
 	public void VisualizaBaralho(){
 		int cartaMonte = 0;
 		
 		//cabeçalho relatório
-		System.err.println("                               >>>    S I T U A Ç Ã O      D O      B A R A L H O    <<<");
-		System.out.println("------------------------------------------------------------------------------------------------------------------------");
-		System.out.println("       CARTA       [L o c a l]       CARTA       [L o c a l]       CARTA       [L o c a l]       CARTA       [L o c a l]");
-		System.out.print("------------------------------------------------------------------------------------------------------------------------");
+		System.err.println("                             >>>    S I T U A Ç Ã O      D O      B A R A L H O    <<<");
+		try {
+			Thread.sleep(25);		//delay para garantir a impressão do texto acima antes (err)
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("-------------------------------------------------------------------------------------------------------------------");
+		System.out.println("      CARTA      [L o c a l]      CARTA      [L o c a l]      CARTA      [L o c a l]      CARTA      [L o c a l]");
+		System.out.print("-------------------------------------------------------------------------------------------------------------------");
 
 		//montagem em quatro colunas por linha (4x2=52)
 		for (int linha=0; linha<13; linha++){
 			System.out.print("\n");
 			for (int coluna=0; coluna<4; coluna++){
+				try {
+					Thread.sleep(5);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				//valor da carta
 				switch(this.carta[(this.baralho[cartaMonte][0])][1]){
 				case 0:
-					System.out.print("     Ás");
+					System.out.print("    A");
 					break;
 				case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8:
-					System.out.print("      "+(this.carta[(this.baralho[cartaMonte][0])][1]+1));
+					System.out.print("    "+(this.carta[(this.baralho[cartaMonte][0])][1]+1));
 					break;
 				case 9:
-					System.out.print("     "+(this.carta[(this.baralho[cartaMonte][0])][1]+1));
+					System.out.print("   "+(this.carta[(this.baralho[cartaMonte][0])][1]+1));
 					break;
 				case 10:
-					System.out.print(" Valete");
+					System.out.print("    J");
 					break;
 				case 11:
-					System.out.print("   Dama");
+					System.out.print("    Q");
 					break;
 				case 12:
-					System.out.print("    Rei");
+					System.out.print("    K");
 					break;
 				}
 				//naipe da carta
@@ -127,27 +136,26 @@ public class Baralho {
 				case 6:
 					System.out.print(" [ m e s a ]");
 					break;
+				case 7:
+					System.out.print(" [ f o r a ]");
+					break;
 				}
 				cartaMonte++;
 			}
 		}
-		System.out.println("\n------------------------------------------------------------------------------------------------------------------------");
+		System.out.println("\n-------------------------------------------------------------------------------------------------------------------");
 	}
 
-	public void setCarta(int[][] carta) {
-		this.carta = carta;
-	}
-	
-	public int[][] getCarta() {
-		return this.carta;
+	public int[][] getBaralho() {
+		return this.baralho;
 	}
 
 	public void setBaralho(int[][] baralho) {
 		this.baralho = baralho;
 	}
 
-	public int[][] getBaralho() {
-		return this.baralho;
+	public int[][] getCarta() {
+		return this.carta;
 	}
-	
+
 }
