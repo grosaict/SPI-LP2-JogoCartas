@@ -5,7 +5,7 @@ public class Jogo {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
-		int carta [][] = new int[52][2];
+		int cartas [][] = new int[52][2];
 		int baralho [][] = new int[52][2];
 		
 		char itemMenu;
@@ -25,28 +25,30 @@ public class Jogo {
 				rodada ++;
 				b.InicializaBaralho();				//rotina para inicializar o baralho
 				
-				r.RecebeJogadores(rodada);			//rotinas para inicializar jogadores
+				if(rodada == 1){
+					r.RecebeJogadores(rodada);		//rotinas para inicializar jogadores
+				}
 				primeiroJogador = r.SorteiaPrimeiroJogador();
 				b.Atribui5Cartas(primeiroJogador);
 				
 				b.VisualizaBaralho();				//rotina para visualizar o baralho
 				
-				carta = b.getCarta();				//rotinas para executar a jogada
+				cartas = b.getCarta();				//rotinas para executar a jogada
 				baralho = b.getBaralho();
-				baralho = r.RealizaRodada(primeiroJogador, carta, baralho);
+				baralho = r.RealizaRodada(primeiroJogador, cartas, baralho);
 				b.setBaralho(baralho);
 				
-				//b.VisualizaBaralho();				//rotina para visualizar o baralho
+				b.VisualizaBaralho();				//rotina para visualizar o baralho
 				break;
-			case 'R':
+			case 'S':
 				if (rodada > 0){
-					System.out.println("Implementar apresentação resultado do último jogo");
+					r.ScoreAtual(cartas, baralho);	//rotina para visualizar o score atual
 				}else{
 					System.err.println("Ainda não houve nenhuma rodada!!!");
 				}
 				break;
 			}
-		}while(itemMenu == 'N' || itemMenu == 'R');
+		}while(itemMenu == 'N' || itemMenu == 'S');
 		
 		System.err.println(">>> Sistema Encerrado <<<");
 	}

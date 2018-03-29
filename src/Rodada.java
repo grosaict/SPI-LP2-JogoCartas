@@ -36,75 +36,136 @@ public class Rodada {
 	public int [][] RealizaRodada(int jogadorDaVez, int cartas[][], int baralho[][]){
 		int cartaMonteDisponivel = 25;
 		int cartaEscolhida[] = new int [5];
-		int venceTurno;
 		int valorCartaEsolhida[] = new int [5];
+		int venceTurno;
 		boolean temK;
 		
 		do{
+			//realização das jogadas
 			temK = false;
-			for (int i=0; i<6; i++){		//um ciclo a mais para o proximo turno ter novo primero jogador
-				if (i < 5){
-					VisualizaMesa(jogadorDaVez, cartas, baralho);
+			VisualizaMesa(jogadorDaVez, cartas, baralho);
+			
+			for (int i=0; i<5; i++){			//5 ciclos para participacao de todos jogadores no turno
+				//escolhe a carta a ser colocada na mesa
+				System.out.println("["+(jogadorDaVez+1)+" - "+j[jogadorDaVez].getNomeJogador()+"], escolha uma carta para descartar");
+				cartaEscolhida[jogadorDaVez] = em.escolhaCarta(jogadorDaVez, baralho);
 
-					//escolhe a carta a ser colocada na mesa
-					System.out.println("["+(jogadorDaVez+1)+" - "+j[jogadorDaVez].getNomeJogador()+"], escolha uma carta para descartar");
-					cartaEscolhida[jogadorDaVez] = em.escolhaCarta(jogadorDaVez, baralho);
-
-					//posiciona a carta na mesa e grava valor para saber o maior
-					baralho[(cartaEscolhida[jogadorDaVez])][1] = 6;
-					valorCartaEsolhida[jogadorDaVez] = cartas[(baralho[(cartaEscolhida[jogadorDaVez])][0])][1];
-					
-					//compra carta se disponivel
-					if (cartaMonteDisponivel < 52){
-						baralho[(cartaMonteDisponivel)][1] = jogadorDaVez+1;
-						cartaMonteDisponivel++;
-					}
-
-					//registra se há uma carta de valor K na jogada
-					if (valorCartaEsolhida[jogadorDaVez] == 12){
-						temK = true;
-					}
-				}else{
-					venceTurno = 0;
-					for (int jogador=0; jogador<5; jogador++){	//localiza maior e ajusta baralho
-						if ((valorCartaEsolhida[venceTurno] == valorCartaEsolhida[jogador])
-						&& (venceTurno != jogador)){
-							System.out.println("Há jogadores empatados!!! Cartas fora do jogo.");
-							venceTurno = 99;					//o valor indica o empate
-							jogador = 6;						//se há empate encerra o <for>: localiza maior
-						}else{
-							if ((valorCartaEsolhida[jogador] == 0 && temK)
-							|| (valorCartaEsolhida[jogador] > valorCartaEsolhida[venceTurno])){
-								venceTurno = jogador;
-							}
-						}
-					}
-					for (int j=0; j<5; j++){
-						if (venceTurno == 99){
-							baralho[(cartaEscolhida[j])][1] = 7;
-						}else{
-							baralho[(cartaEscolhida[j])][1] = (venceTurno+1);
-						}
-					}
+				//posiciona a carta na mesa e registra seu valor para saber qual a maior carta logo em seguida
+				baralho[(cartaEscolhida[jogadorDaVez])][1] = 6;
+				valorCartaEsolhida[jogadorDaVez] = cartas[(baralho[(cartaEscolhida[jogadorDaVez])][0])][1];
+				
+				//compra proxima carta no monte se disponivel
+				if (cartaMonteDisponivel < 52){
+					baralho[(cartaMonteDisponivel)][1] = jogadorDaVez+1;
+					cartaMonteDisponivel++;
 				}
+
+				//registra se há uma carta de valor K na jogada
+				if (valorCartaEsolhida[jogadorDaVez] == 12){
+					temK = true;
+				}
+				
+				//atualiza jogador da vez para próximo ciclo
 				if (jogadorDaVez == 4){
 					jogadorDaVez = 0;
 				}else{
 					jogadorDaVez++;
 				}
+				VisualizaMesa(jogadorDaVez, cartas, baralho);		//refresh da tela
 			}
-		}while(cartaMonteDisponivel < 55);
+			
+			//a partir daqui há a verificação de quem ganhou o turno
+			venceTurno = 0;
+			
+			//localiza maior carta e ajusta baralho
+			for (int jogador=0; jogador<5; jogador++){
+				if (valorCartaEsolhida[jogador] == 0 && temK){
+					valorCartaEsolhida[jogador] = 13;	//sem tem K no turno, A passa a ser a carta de maior valor
+				}
+				if (valorCartaEsolhida[jogador] > valorCartaEsolhida[venceTurno]){
+					venceTurno = jogador;
+				}
+			}
+			
+			//verifica se há mais de uma carta com o maior valor
+			for (int jogador=0; jogador<5; jogador++){
+				if ((valorCartaEsolhida[venceTurno] == valorCartaEsolhida[jogador])
+					&& (venceTurno != jogador)){
+						try {
+							Thread.sleep(5);				//delay para garantir a impressão do texto abaixo após (err)
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						System.err.println("*** Há jogadores empatados!!! Cartas fora do jogo. ***");
+						venceTurno = 99;					//o valor indica o empate
+						jogador = 5;						//se há empate encerra o <for>: localiza maior
+					}
+			}
+			
+			//atualiza baralho conforme resultado
+			for (int j=0; j<5; j++){
+				if (venceTurno == 99){
+					baralho[(cartaEscolhida[j])][1] = 7;				//se empate coloca as 5 cartas na posicao [fora do jogo]
+				}else{
+					baralho[(cartaEscolhida[j])][1] = (venceTurno+1);	//se ganhador atribui as 5 cartas ao vencedor
+				}
+			}
+			
+			//atualiza jogador da vez para próximo turno
+			if (jogadorDaVez == 4){
+				jogadorDaVez = 0;
+			}else{
+				jogadorDaVez++;
+			}
+		}while(cartaMonteDisponivel < 52);
+		
+		VisualizaMesa(99, cartas, baralho);			//refresh da tela
+		
+		AtualizaPontuacao(cartas, baralho);			//atualiza pontuação dos jogadores
+		//ScoreAtual(cartas, baralho);				//visualiza score atual
 		
 		return baralho;
 	}
 	
+	public void AtualizaPontuacao(int cartas[][], int baralho[][]){
+		int ptsCarta;
+		
+		for (int cartaAtual=0; cartaAtual<52; cartaAtual++){
+			if (baralho[cartaAtual][1] >= 1 && baralho[cartaAtual][1] <= 5){	//verifica se a carta está com algum jogador
+				switch (cartas[(baralho[cartaAtual][0])][1]){					//retorna valor da carta
+				case 0:						ptsCarta = 1;
+					break;
+				case 1: case 2: case 3: case 4: case 5: case 6: case 7: case 8: case 9:
+					ptsCarta = cartas[(baralho[cartaAtual][0])][1] + 1;
+					break;
+				case 10: case 11: case 12:
+					ptsCarta = 11;
+					break;
+				default:
+					ptsCarta = 0;
+				}
+				j[(baralho[cartaAtual][1]-1)].AtualizaPontos(ptsCarta);
+			}
+		}
+	}
+	
+	public void ScoreAtual(int cartas[][], int baralho[][]){
+		System.err.println("\n\n >>>       S C O R E       <<<");
+		System.out.println("----------------------------------");
+		for (int jogador=0; jogador<5; jogador++){
+			System.out.print(" ["+(jogador+1)+" - "+j[jogador].getNomeJogador().substring(0,12)+"]");
+			System.out.println(" = "+j[jogador].getPontos()+" pontos");
+		}
+		System.out.print("----------------------------------");
+	}
+			
 	public void VisualizaMesa(int jogadorDaVez, int cartas[][], int baralho[][]){
 		int cartaEncontrada, ocorrencia;
 		int prxCartaJogador[] = new int [5];
 		boolean fimLista;
 		
 		//cabeçalho relatório
-		System.out.println("\n\n                      >>>    S I T U A Ç Ã O      D A      M E S A    <<<");
+		System.out.println("\n\n                      >>>    S I T U A Ç Ã O      D A      M A O      <<<");
 		System.out.println("-----------------------------------------------------------------------------------------------");
 		for (int jogador=0; jogador<5; jogador++){
 			prxCartaJogador[jogador] = 1;			//inicializa indicando para apresentar a 1a carta do jogador
@@ -154,7 +215,7 @@ public class Rodada {
 			}
 		}while(!fimLista);
 
-		System.out.println("\n                      >>>            D E S C A R T A D A S            <<<");
+		System.out.println("\n                      >>>    S I T U A Ç Ã O      D A      M E S A    <<<");
 		System.out.println("-----------------------------------------------------------------------------------------------");
 
 		ocorrencia = 0;
@@ -170,7 +231,7 @@ public class Rodada {
 				ImprimeNaipeCarta(cartaEncontrada, cartas);
 			}
 		}
-		System.out.println("\n-----------------------------------------------------------------------------------------------");
+		System.out.println("\n-----------------------------------------------------------------------------------------------\n");
 	}
 	
 	public void ImprimeVlrCarta(int cartaBaralho, int cartaSolicitada, int cartas[][]){

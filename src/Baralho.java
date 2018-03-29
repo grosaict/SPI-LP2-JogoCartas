@@ -137,7 +137,12 @@ public class Baralho {
 					System.out.print(" [ m e s a ]");
 					break;
 				case 7:
-					System.out.print(" [ f o r a ]");
+					try {
+						Thread.sleep(5);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					System.err.print(" [ f o r a ]");
 					break;
 				}
 				cartaMonte++;

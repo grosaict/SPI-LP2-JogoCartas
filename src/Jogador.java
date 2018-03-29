@@ -9,7 +9,7 @@ public class Jogador {
 	}
 	
 	public void AtualizaPontos(int ptsGanhos){
-		this.pontos =+ ptsGanhos;
+		this.pontos = this.pontos + ptsGanhos;
 	}
 
 	public String getNomeJogador() {

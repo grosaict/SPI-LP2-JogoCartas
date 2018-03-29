@@ -7,12 +7,12 @@ public class EntradaMenu {
 		Scanner leia = new Scanner(System.in);
 		System.out.println("\nInforme a opção desejada:");
 		System.out.println("[N]ova Rodada");
-		System.out.println("[R]esultado da Última Rodada");
+		System.out.println("[S]core Atual");
 		System.out.println("[E]cerrar Sistema");
 		try {
 			itemMenu = leia.next().charAt(0);
 			itemMenu = Character.toUpperCase(itemMenu);
-			if (itemMenu != 'N' && itemMenu != 'R' && itemMenu != 'E'){
+			if (itemMenu != 'N' && itemMenu != 'S' && itemMenu != 'E'){
 				throw new Exception("OPÇÃO INEXISTENTE");
 			}
 		}catch(Exception e){
